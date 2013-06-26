@@ -82,7 +82,7 @@ sub Load {
         ) );
 
     my $som;
-    if ( $id =~ /^(\d+|\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?)$/i ) {
+    if ( $id =~ /^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i ) {
         # Query by guid
         $som = $soap->GetFoldersById(
             $auth,
