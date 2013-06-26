@@ -5,259 +5,259 @@ package Panopto::Interface::SessionManagement;
 # -- generated from https://demo.hosted.panopto.com/Panopto/PublicAPI/4.2/SessionManagement.svc?wsdl
 my %methods = (
 GetFoldersByExternalId => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetFoldersByExternalId',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetFoldersByExternalId
 UpdateSessionExternalId => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionExternalId',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateSessionExternalId
 AddFolder => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/AddFolder',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end AddFolder
 UpdateFolderAllowSessionDownload => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderAllowSessionDownload',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderAllowSessionDownload
 ListNotes => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/ListNotes',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end ListNotes
 MoveSessions => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/MoveSessions',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end MoveSessions
 SetNotesPublic => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/SetNotesPublic',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end SetNotesPublic
 GetSessionsById => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetSessionsById',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetSessionsById
 GetSessionsByExternalId => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetSessionsByExternalId',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetSessionsByExternalId
 UpdateSessionDescription => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionDescription',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateSessionDescription
 IsDropbox => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/IsDropbox',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end IsDropbox
 AddSession => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/AddSession',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end AddSession
 UpdateSessionName => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionName',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateSessionName
 CreateNoteByAbsoluteTime => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/CreateNoteByAbsoluteTime',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end CreateNoteByAbsoluteTime
 AreUsersNotesPublic => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/AreUsersNotesPublic',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end AreUsersNotesPublic
 UpdateFolderAllowPublicNotes => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderAllowPublicNotes',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderAllowPublicNotes
 DeleteFolders => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/DeleteFolders',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end DeleteFolders
 GetNote => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetNote',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetNote
 UploadTranscript => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UploadTranscript',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UploadTranscript
 EditNote => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/EditNote',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end EditNote
 CreateCaptionByRelativeTime => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/CreateCaptionByRelativeTime',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end CreateCaptionByRelativeTime
 DeleteNote => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/DeleteNote',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end DeleteNote
 UpdateFolderExternalId => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderExternalId',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderExternalId
 GetFoldersList => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetFoldersList',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetFoldersList
 ProvisionExternalCourse => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/ProvisionExternalCourse',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end ProvisionExternalCourse
 DeleteSessions => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/DeleteSessions',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end DeleteSessions
 GetFoldersById => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetFoldersById',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetFoldersById
 UpdateSessionIsBroadcast => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionIsBroadcast',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateSessionIsBroadcast
 GetSessionsList => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetSessionsList',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetSessionsList
 UpdateFolderName => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderName',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderName
 UpdateFolderParent => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderParent',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderParent
 SetExternalCourseAccess => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/SetExternalCourseAccess',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end SetExternalCourseAccess
 CreateCaptionByAbsoluteTime => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/CreateCaptionByAbsoluteTime',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end CreateCaptionByAbsoluteTime
 CreateNoteByRelativeTime => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/CreateNoteByRelativeTime',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end CreateNoteByRelativeTime
 UpdateFolderEnablePodcast => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderEnablePodcast',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end UpdateFolderEnablePodcast
 GetRecorderDownloadUrls => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/GetRecorderDownloadUrls',
     namespace => 'http://tempuri.org/',
     parameters => [
     ], # end parameters
   }, # end GetRecorderDownloadUrls
 UpdateFolderDescription => {
-    endpoint => 'https://' . Panopto->ServerName . '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateFolderDescription',
     namespace => 'http://tempuri.org/',
     parameters => [
@@ -278,7 +278,7 @@ sub _call {
     my ($self, $method) = (shift, shift);
     my $name = UNIVERSAL::isa($method => 'SOAP::Data') ? $method->name : $method;
     my %method = %{$methods{$name}};
-    $self->proxy($method{endpoint} || Carp::croak "No server address (proxy) specified")
+    $self->proxy('https://' . Panopto->ServerName . $method{endpoint} || Carp::croak "No server address (proxy) specified")
         unless $self->proxy;
     my @templates = @{$method{parameters}};
     my @parameters = ();
@@ -295,7 +295,7 @@ sub _call {
             push(@parameters, $param);
         }
     }
-    $self->endpoint($method{endpoint})
+    $self->endpoint('https://' . Panopto->ServerName . $method{endpoint})
        ->ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
     $self->serializer->register_ns("http://tempuri.org/","tns");
