@@ -107,6 +107,34 @@ sub SetExternalId {
 }
 
 
+sub MachineIP {
+    my $self = shift;
+
+    return $RemoteRecorder->{'MachineIP'};
+}
+
+
+sub Name {
+    my $self = shift;
+
+    return $RemoteRecorder->{'Name'};
+}
+
+
+sub PreviewURL {
+    my $self = shift;
+
+    return $RemoteRecorder->{'PreviewURL'};
+}
+
+
+sub SettingsURL {
+    my $self = shift;
+
+    return $RemoteRecorder->{'SettingsURL'};
+}
+
+
 sub State {
     my $self = shift;
 
