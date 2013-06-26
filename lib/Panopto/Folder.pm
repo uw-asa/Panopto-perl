@@ -10,7 +10,6 @@ use SOAP::Lite +trace => qw(debug);
 
 
 our (
-    $auth,
     $soap,
     $Folder,
     );
@@ -39,17 +38,9 @@ sub Create {
     $soap->autotype(0);
     $soap->want_som(1);
 
-    $auth = SOAP::Data->new(
-        prefix => 'tns',
-        name   => 'auth',
-        value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => Panopto->AuthCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => Panopto->UserKey ),
-        ) );
-
     my $som;
     $som = $soap->AddFolder(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( name => $args{'name'} ),
         SOAP::Data->prefix('tns')->name( parentFolder => $args{'parentFolder'} ),
         SOAP::Data->prefix('tns')->name( isPublic => $args{'isPublic'}?'true':'false' ),
@@ -73,19 +64,11 @@ sub Load {
     $soap->autotype(0);
     $soap->want_som(1);
 
-    $auth = SOAP::Data->new(
-        prefix => 'tns',
-        name   => 'auth',
-        value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => Panopto->AuthCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => Panopto->UserKey ),
-        ) );
-
     my $som;
     if ( $id =~ /^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i ) {
         # Query by guid
         $som = $soap->GetFoldersById(
-            $auth,
+            Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name(
                 folderIds => \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( guid => $id ),
@@ -95,7 +78,7 @@ sub Load {
     else {
         # Query by ExternalId
         $som = $soap->GetFoldersByExternalId(
-            $auth,
+            Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name(
                 folderExternalIds => \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( string => $id ),
@@ -134,7 +117,7 @@ sub SetExternalId {
     my $externalId = shift;
 
     my $som = $soap->UpdateFolderExternalId(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
         SOAP::Data->prefix('tns')->name( externalId => $externalId ),
     );
@@ -158,7 +141,7 @@ sub SetDescription {
     my $description = shift;
 
     my $som = $soap->UpdateFolderDescription(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
         SOAP::Data->prefix('tns')->name( description => $description ),
     );

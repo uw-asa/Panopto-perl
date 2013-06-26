@@ -29,16 +29,8 @@ sub Load {
     $soap->autotype(0);
     $soap->want_som(1);
 
-    my $auth = SOAP::Data->new(
-        prefix => 'tns',
-        name   => 'auth',
-        value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => Panopto->AuthCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => Panopto->UserKey ),
-        ) );
-
     $som = $soap->GetSessionsById(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             remoteRecorderIds => \SOAP::Data->value(
                 SOAP::Data->prefix('arrays')->name( guid => $id ),

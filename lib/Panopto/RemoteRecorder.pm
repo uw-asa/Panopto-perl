@@ -10,7 +10,6 @@ use SOAP::Lite +trace => qw(debug);
 
 
 our (
-    $auth,
     $soap,
     $RemoteRecorder,
     );
@@ -34,19 +33,11 @@ sub Load {
     $soap->autotype(0);
     $soap->want_som(1);
 
-    $auth = SOAP::Data->new(
-        prefix => 'tns',
-        name   => 'auth',
-        value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => Panopto->AuthCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => Panopto->UserKey ),
-        ) );
-
     my $som;
     if ( $id =~ /\D/ ) {
         # Query by guid
         $som = $soap->GetRemoteRecordersById(
-            $auth,
+            Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name(
                 remoteRecorderIds => \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( guid => $id ),
@@ -56,7 +47,7 @@ sub Load {
     else {
         # Query by ExternalId
         $som = $soap->GetRemoteRecordersByExternalId(
-            $auth,
+            Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name(
                 externalIds => \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( string => $id ),
@@ -95,7 +86,7 @@ sub SetExternalId {
     my $externalId = shift;
 
     my $som = $soap->UpdateRemoteRecorderExternalId(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( remoteRecorderId => $self->Id ),
         SOAP::Data->prefix('tns')->name( externalId => $externalId ),
     );
@@ -194,7 +185,7 @@ sub ScheduleRecording {
         )->value( \$RecorderSettings );
 
     my $som = $soap->ScheduleRecording(
-        $auth,
+        Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( name => $args{'name'} ),
         SOAP::Data->prefix('tns')->name( folderId => $args{'folderId'} ),
         SOAP::Data->prefix('tns')->name( isBroadcast => $args{'isBroadcast'}?'true':'false' ),
