@@ -76,7 +76,7 @@ sub List {
 
     return undef unless $self->{'session_list'};
 
-    return $self->{'session_list'};
+    return @{$self->{'session_list'}};
 }
 
 

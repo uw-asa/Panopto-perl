@@ -12,6 +12,31 @@ our (
     );
 
 
+sub import
+{
+    my $self = shift;
+    my %args = (
+        ServerName     => undef,
+        Instance       => undef,
+        ApplicationKey => undef,
+        Username       => undef,
+        Password       => undef,
+        @_,
+        );
+
+    $self->SetServerName( $args{'ServerName'} )
+        if $args{'ServerName'};
+    $self->SetInstance( $args{'Instance'} )
+        if $args{'Instance'};
+    $self->SetApplicationKey( $args{'ApplicationKey'} )
+        if $args{'ApplicationKey'};
+    $self->SetUsername( $args{'Username'} )
+        if $args{'Username'};
+    $self->SetPassword( $args{'Password'} )
+        if $args{'Password'};
+}
+
+
 sub ServerName { return $ServerName; }
 
 sub SetServerName {
@@ -41,6 +66,14 @@ sub Username { return $Username; }
 sub SetUsername {
     my $self = shift;
     return ( $Username = shift );
+}
+
+
+sub Password { return $Password; }
+
+sub SetPassword {
+    my $self = shift;
+    return ( $Password = shift );
 }
 
 

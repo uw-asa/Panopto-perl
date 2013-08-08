@@ -3,16 +3,8 @@ package Panopto::Folder;
 use strict;
 use warnings;
 
-use Panopto;
-
 use Panopto::Interface::SessionManagement;
 use SOAP::Lite +trace => qw(debug);
-
-
-our (
-    $soap,
-    $Folder,
-    );
 
 
 sub new  {
@@ -33,13 +25,12 @@ sub Create {
         @_
         );
 
-    $soap = new Panopto::Interface::SessionManagement;
+    my $soap = new Panopto::Interface::SessionManagement;
 
     $soap->autotype(0);
     $soap->want_som(1);
 
-    my $som;
-    $som = $soap->AddFolder(
+    my $som = $soap->AddFolder(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( name => $args{'name'} ),
         SOAP::Data->prefix('tns')->name( parentFolder => $args{'parentFolder'} ),
@@ -49,7 +40,9 @@ sub Create {
     return ( 0, $som->fault->{ 'faultstring' } )
         if $som->fault;
 
-    $Folder = $som->result;
+    for my $key ( keys %$som->result ) {
+        $self->{$key} = $som->result->{$key};
+    }
 
     return $self->Id;
 }
@@ -59,7 +52,7 @@ sub Load {
     my $self = shift;
     my $id = shift;
 
-    $soap = new Panopto::Interface::SessionManagement;
+    my $soap = new Panopto::Interface::SessionManagement;
 
     $soap->autotype(0);
     $soap->want_som(1);
@@ -92,7 +85,9 @@ sub Load {
     return undef
         unless $som->result->{'Folder'};
 
-    $Folder = $som->result->{'Folder'};
+    for my $key ( keys %{$som->result->{'Folder'}} ) {
+        $self->{$key} = $som->result->{'Folder'}->{$key};
+    }
 
     return $self->Id;
 }
@@ -101,20 +96,25 @@ sub Load {
 sub Id {
     my $self = shift;
 
-    return $Folder->{'Id'};
+    return $self->{'Id'};
 }
 
 
 sub ExternalId {
     my $self = shift;
 
-    return $Folder->{'ExternalId'};
+    return $self->{'ExternalId'};
 }
 
 
 sub SetExternalId {
     my $self = shift;
     my $externalId = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
 
     my $som = $soap->UpdateFolderExternalId(
         Panopto->AuthenticationInfo,
@@ -132,13 +132,18 @@ sub SetExternalId {
 sub Description {
     my $self = shift;
 
-    return $Folder->{'Description'};
+    return $self->{'Description'};
 }
 
 
 sub SetDescription {
     my $self = shift;
     my $description = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
 
     my $som = $soap->UpdateFolderDescription(
         Panopto->AuthenticationInfo,
@@ -156,7 +161,7 @@ sub SetDescription {
 sub State {
     my $self = shift;
 
-    return $Folder->{'State'};
+    return $self->{'State'};
 }
 
 

@@ -3,16 +3,8 @@ package Panopto::RemoteRecorder;
 use strict;
 use warnings;
 
-use Panopto;
-
 use Panopto::Interface::RemoteRecorderManagement;
 use SOAP::Lite +trace => qw(debug);
-
-
-our (
-    $soap,
-    $RemoteRecorder,
-    );
 
 
 sub new  {
@@ -28,13 +20,13 @@ sub Load {
     my $self = shift;
     my $id = shift;
 
-    $soap = new Panopto::Interface::RemoteRecorderManagement;
+    my $soap = new Panopto::Interface::RemoteRecorderManagement;
 
     $soap->autotype(0);
     $soap->want_som(1);
 
     my $som;
-    if ( $id =~ /\D/ ) {
+    if ( $id =~ /^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i ) {
         # Query by guid
         $som = $soap->GetRemoteRecordersById(
             Panopto->AuthenticationInfo,
@@ -61,29 +53,36 @@ sub Load {
     return undef
         unless $som->result->{'RemoteRecorder'};
 
-    $RemoteRecorder = $som->result->{'RemoteRecorder'};
+    for my $key ( keys %{$som->result->{'RemoteRecorder'}} ) {
+        $self->{$key} = $som->result->{'RemoteRecorder'}->{$key};
+    }
 
-    return $RemoteRecorder->{'Id'};
+    return $self->Id;
 }
 
 
 sub Id {
     my $self = shift;
 
-    return $RemoteRecorder->{'Id'};
+    return $self->{'Id'};
 }
 
 
 sub ExternalId {
     my $self = shift;
 
-    return $RemoteRecorder->{'ExternalId'};
+    return $self->{'ExternalId'};
 }
 
 
 sub SetExternalId {
     my $self = shift;
     my $externalId = shift;
+
+    my $soap = new Panopto::Interface::RemoteRecorderManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
 
     my $som = $soap->UpdateRemoteRecorderExternalId(
         Panopto->AuthenticationInfo,
@@ -101,42 +100,69 @@ sub SetExternalId {
 sub MachineIP {
     my $self = shift;
 
-    return $RemoteRecorder->{'MachineIP'};
+    return $self->{'MachineIP'};
 }
 
 
 sub Name {
     my $self = shift;
 
-    return $RemoteRecorder->{'Name'};
+    return $self->{'Name'};
 }
 
 
 sub PreviewURL {
     my $self = shift;
 
-    return $RemoteRecorder->{'PreviewURL'};
+    return $self->{'PreviewURL'};
 }
 
 
 sub SettingsURL {
     my $self = shift;
 
-    return $RemoteRecorder->{'SettingsURL'};
+    return $self->{'SettingsURL'};
 }
 
+
+=head2 State
+
+    returns the state of the recorder, as a string.
+
+    Stopped         0   Not recording and no preview available
+    Previewing      1   Not recording and a preview is available
+    Recording       2   Currently recording
+    Paused          3   Paused during a recording
+    Faulted         4   An error has occured preventing recording
+    Disconnected    5   Not connected to the network
+    Blocked         6   The Panopto recorder (not the remote recorder) is
+                        Running on the machine so the remote recorder can't run
+
+=cut
 
 sub State {
     my $self = shift;
 
-    return $RemoteRecorder->{'State'};
+    return $self->{'State'};
 }
 
+
+=head2 ScheduledRecordings
+
+    returns hashref: { guid => [ <array of guids> ] }
+
+=cut
 
 sub ScheduledRecordings {
     my $self = shift;
 
-    return $RemoteRecorder->{'ScheduledRecordings'};
+    return undef
+        unless $self->{'ScheduledRecordings'};
+
+    return { guid => [ $self->{'ScheduledRecordings'}->{'guid'} ] }
+        if ref $self->{'ScheduledRecordings'}->{'guid'} ne 'ARRAY';
+
+    return $self->{'ScheduledRecordings'};
 }
 
 
@@ -183,6 +209,11 @@ sub ScheduleRecording {
 #        type  => 'api:ArrayOfRecorderSettings',
         name  => 'recorderSettings',
         )->value( \$RecorderSettings );
+
+    my $soap = new Panopto::Interface::RemoteRecorderManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
 
     my $som = $soap->ScheduleRecording(
         Panopto->AuthenticationInfo,
