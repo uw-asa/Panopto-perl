@@ -40,7 +40,7 @@ sub Create {
     return ( 0, $som->fault->{ 'faultstring' } )
         if $som->fault;
 
-    for my $key ( keys %$som->result ) {
+    for my $key ( keys %{$som->result} ) {
         $self->{$key} = $som->result->{$key};
     }
 
@@ -81,6 +81,9 @@ sub Load {
 
     return ( 0, $som->fault->{ 'faultstring' } )
         if $som->fault;
+
+    return undef
+        unless ref $som->result eq 'HASH';
 
     return undef
         unless $som->result->{'Folder'};
