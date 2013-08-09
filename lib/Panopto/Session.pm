@@ -98,6 +98,37 @@ sub IsBroadcast {
 }
 
 
+sub UpdateIsBroadcast {
+    my $self = shift;
+    my %args = (
+        isBroadcast => undef, # boolean
+        end   => undef, # timestamp
+        @_,
+        );
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateSessionIsBroadcast(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( sessionId => $self->Id ),
+        SOAP::Data->prefix('tns')->name(
+            isBroadcast => ( $args{'isBroadcast'} ? 'true' : 'false' ) ),
+        );
+
+    return undef
+        if $som->fault;
+
+    return;
+
+    my $result = $som->result->{'ScheduledRecordingResult'};
+
+    return $result->{'SessionIDs'};
+}
+
+
 sub Name {
     my $self = shift;
 
@@ -151,6 +182,7 @@ sub UpdateRecordingTime {
     my %args = (
         start => undef, # timestamp
         end   => undef, # timestamp
+        @_,
         );
 
     my $soap = new Panopto::Interface::RemoteRecorderManagement;
