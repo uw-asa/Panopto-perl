@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Panopto::Interface::SessionManagement;
-use SOAP::Lite; # +trace => qw(debug);
+#use SOAP::Lite +trace => qw(debug);
 
 
 =head2 new
@@ -34,13 +34,11 @@ sub new  {
 
 sub Load {
     my $self = shift;
-    my %args = (
-        guid => undef,
-        @_,
-        );
+    my $guid = shift;
+    $guid = shift if $guid eq 'guid';
 
-    return undef
-        unless ref $args{'guid'} eq 'ARRAY';
+    $guid = [ $guid ]
+        unless ref $guid eq 'ARRAY';
 
 # =~ /^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i;
 
@@ -55,7 +53,7 @@ sub Load {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             sessionIds => \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( guid => $args{'guid'} ),
+                SOAP::Data->prefix('ser')->name( guid => $guid ),
             )
         ) );
 
@@ -70,6 +68,26 @@ sub Load {
 }
 
 
+sub CreateScheduled {
+    my $self = shift;
+    my %args = (
+        recorder    => undef, # obj
+        name        => undef, # string
+        folderId    => undef, # guid
+        isBroadcast => undef, # boolean
+        start       => undef, # timestamp
+        end         => undef, # timestamp
+        @_
+        );
+
+    my ($sessionId, $msg) = $args{'recorder'}->ScheduleRecording(%args);
+
+    return (undef, $msg) unless $sessionId;
+
+    return $self->Load($sessionId);
+}
+
+
 sub Duration {
     my $self = shift;
 
@@ -81,6 +99,35 @@ sub Id {
     my $self = shift;
 
     return $self->{'Id'};
+}
+
+
+sub ExternalId {
+    my $self = shift;
+
+    return $self->{'ExternalId'};
+}
+
+
+sub SetExternalId {
+    my $self = shift;
+    my $externalId = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateSessionExternalId(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( sessionId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( externalId => $externalId ),
+    );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
 }
 
 
@@ -133,6 +180,57 @@ sub Name {
     my $self = shift;
 
     return $self->{'Name'};
+}
+
+
+sub SetName {
+    my $self = shift;
+    my $name = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateSessionName(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( sessionId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( name => $name ),
+    );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
+}
+
+
+sub Description {
+    my $self = shift;
+
+    return $self->{'Description'};
+}
+
+
+sub SetDescription {
+    my $self = shift;
+    my $description = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateSessionDescription(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( sessionId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( description => $description ),
+    );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
 }
 
 

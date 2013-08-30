@@ -4,12 +4,12 @@ use strict;
 use warnings;
 
 use Panopto::Interface::RemoteRecorderManagement;
-use SOAP::Lite +trace => qw(debug);
+#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
     my $class = shift;
-    my $self  = {};
+    my $self  = { @_ };
     bless ($self, $class);
 
     return $self;
@@ -225,14 +225,15 @@ sub ScheduleRecording {
         $recorderSettings,
         );
 
-    return undef
+    return ( undef, $som->fault->{ 'faultstring' } )
         if $som->fault;
 
-#TODO check ConflictsExist, ConflictingSessions
+    return ( undef, "Conflicting sessions found" )
+        unless $som->result->{'ConflictsExist'} eq 'false';
 
-    my $result = $som->result->{'ScheduledRecordingResult'};
+    my $result = $som->result->{'SessionIDs'};
 
-    return $result->{'SessionIDs'};
+    return $result->{'guid'};
 }
 
 

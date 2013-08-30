@@ -2,13 +2,10 @@ package Panopto;
 
 
 our (
-    $ServerName,
-    $Instance,
-    $ApplicationKey,
-    $Username,
-    $UserKey,
-    $AuthCode,
-    $AuthenticationInfo,
+    $userName,
+    $serverName,
+    $providerName,
+    $applicationKey,
     );
 
 
@@ -16,100 +13,87 @@ sub import
 {
     my $self = shift;
     my %args = (
-        ServerName     => undef,
-        Instance       => undef,
-        ApplicationKey => undef,
-        Username       => undef,
-        Password       => undef,
+        userName       => undef,
+        serverName     => undef,
+        providerName   => undef,
+        applicationKey => undef,
         @_,
         );
 
-    $self->SetServerName( $args{'ServerName'} )
-        if $args{'ServerName'};
-    $self->SetInstance( $args{'Instance'} )
-        if $args{'Instance'};
-    $self->SetApplicationKey( $args{'ApplicationKey'} )
-        if $args{'ApplicationKey'};
-    $self->SetUsername( $args{'Username'} )
-        if $args{'Username'};
-    $self->SetPassword( $args{'Password'} )
-        if $args{'Password'};
+    $self->SetUserName( $args{'userName'} )
+        if $args{'userName'};
+    $self->SetServerName( $args{'serverName'} )
+        if $args{'serverName'};
+    $self->SetProviderName( $args{'providerName'} )
+        if $args{'providerName'};
+    $self->SetApplicationKey( $args{'applicationKey'} )
+        if $args{'applicationKey'};
 }
 
 
-sub ServerName { return $ServerName; }
+sub UserName { return $userName; }
+
+sub SetUserName {
+    my $self = shift;
+    return ( $userName = shift );
+}
+
+
+sub ServerName { return $serverName; }
 
 sub SetServerName {
     my $self = shift;
-    return ( $ServerName = shift );
+    return ( $serverName = shift );
 }
 
 
-sub Instance { return $Instance; }
+sub ProviderName { return $providerName; }
 
-sub SetInstance {
+sub SetProviderName {
     my $self = shift;
-    return ( $Instance = shift );
+    return ( $providerName = shift );
 }
 
 
-sub ApplicationKey { return $ApplicationKey; }
+sub ApplicationKey { return $applicationKey; }
 
 sub SetApplicationKey {
     my $self = shift;
-    return ( $ApplicationKey = shift );
+    return ( $applicationKey = shift );
 }
 
 
-sub Username { return $Username; }
+sub GetUserKey {
+    my $userName = shift;
 
-sub SetUsername {
-    my $self = shift;
-    return ( $Username = shift );
+    return $providerName . '\\' . $userName;
 }
 
+sub GetAuthCode {
+    my $payload = shift;
 
-sub Password { return $Password; }
-
-sub SetPassword {
-    my $self = shift;
-    return ( $Password = shift );
-}
-
-
-sub UserKey {
-    $UserKey||= Panopto->Instance . '\\' . Panopto->Username;
-
-    return $UserKey;
-}
-
-
-sub AuthCode {
     use Digest::SHA qw(sha1_hex);
 
-    $AuthCode ||= uc( sha1_hex( Panopto->UserKey . '@' .
-                                lc(Panopto->ServerName) . '|' .
-                                lc(Panopto->ApplicationKey) ) );
+    my $signedPayload = $payload . '|' . $applicationKey;
 
-    return $AuthCode;
+    return uc( sha1_hex( $signedPayload ) );
 }
 
 
 sub AuthenticationInfo {
-    $AuthenticationInfo ||= SOAP::Data->new(
+    my $self = shift;
+
+    my $userKey = GetUserKey( $userName );
+    my $authCode = GetAuthCode( $userKey . '@' . $serverName );
+
+    return SOAP::Data->new(
         prefix => 'tns',
         name   => 'auth',
         value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => Panopto->AuthCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => Panopto->UserKey ),
+            SOAP::Data->prefix('api')->name( AuthCode => $authCode ),
+            SOAP::Data->prefix('api')->name( UserKey  => $userKey ),
         ) );
-
-    return $AuthenticationInfo;
 }
-
-
-use Panopto::Interface::RemoteRecorderManagement;
-use SOAP::Lite +trace => qw(debug);
 
 
 sub ListRecorders {
@@ -121,6 +105,7 @@ sub ListRecorders {
         @_,
         );
 
+    use Panopto::Interface::RemoteRecorderManagement;
     my $soap = new Panopto::Interface::RemoteRecorderManagement;
 
     $soap->autotype(0);
@@ -134,15 +119,69 @@ sub ListRecorders {
                 SOAP::Data->prefix('api')->name( PageNumber => $args{'PageNumber'} ),
             )
         ),
-        SOAP::Data->prefix('tns')->name(
-            SortBy => $args{'SortBy'},
-        )
+        SOAP::Data->prefix('tns')->name( SortBy => $args{'SortBy'} )
         );
 
-    Abort($som->fault->{ 'faultstring' }) if $som->fault;
+    die ($som->fault->{ 'faultstring' }) if $som->fault;
 
     return @{$som->result->{'PagedResults'}->{'RemoteRecorder'}};
 
+}
+
+
+sub SyncExternalUser {
+    my $self = shift;
+    my %args = (
+        firstName => undef,
+        lastName  => undef,
+        email     => undef,
+        EmailSessionNotifications => undef,
+        externalGroupIds => undef,
+        @_,
+        );
+
+    use Panopto::Interface::UserManagement;
+    my $soap = new Panopto::Interface::UserManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->SyncExternalUser(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( firstName => $args{'firstName'} ),
+        SOAP::Data->prefix('tns')->name( lastName  => $args{'lastName'} ),
+        SOAP::Data->prefix('tns')->name( email     => $args{'email'} ),
+        SOAP::Data->prefix('tns')->name(
+            EmailSessionNotifications => $args{'EmailSessionNotifications'}?'true':'false' ),
+        SOAP::Data->prefix('tns')->name(
+            externalGroupIds => \SOAP::Data->value(
+                SOAP::Data->prefix('ser')->name( string => $args{'externalGroupIds'} ) ) ),
+        );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return ( 1, "User synchronized" );
+}
+
+
+sub SelfUserAccessDetails {
+    my $self = shift;
+
+    use Panopto::Interface::AccessManagement;
+    my $soap = new Panopto::Interface::AccessManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->GetSelfUserAccessDetails(
+        Panopto->AuthenticationInfo,
+        );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return $som->result;
 }
 
 

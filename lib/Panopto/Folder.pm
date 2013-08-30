@@ -4,12 +4,12 @@ use strict;
 use warnings;
 
 use Panopto::Interface::SessionManagement;
-use SOAP::Lite +trace => qw(debug);
+#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
     my $class = shift;
-    my $self  = {};
+    my $self  = { @_ };
     bless ($self, $class);
 
     return $self;
@@ -48,6 +48,73 @@ sub Create {
 }
 
 
+sub ProvisionExternalCourse {
+    my $self = shift;
+    my %args = (
+        name         => undef, # string
+        externalId   => undef, # string
+        @_
+        );
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->ProvisionExternalCourse(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( name       => $args{'name'} ),
+        SOAP::Data->prefix('tns')->name( externalId => $args{'externalId'} ),
+        );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    for my $key ( keys %{$som->result} ) {
+        $self->{$key} = $som->result->{$key};
+    }
+
+    return $self->Id;
+}
+
+
+
+sub SetExternalCourseAccess {
+    my $self = shift;
+    my %args = (
+        name         => undef, # string
+        externalId   => undef, # string
+        @_
+        );
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->SetExternalCourseAccess(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( name       => $args{'name'} ),
+        SOAP::Data->prefix('tns')->name( externalId => $args{'externalId'} ),
+        SOAP::Data->prefix('tns')->name(
+            folderIds => \SOAP::Data->value(
+                SOAP::Data->prefix('ser')->name( guid => $self->Id ),
+            )
+        )
+        );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    for my $key ( keys %{$som->result} ) {
+        $self->{$key} = $som->result->{$key};
+    }
+
+    return $self->Id;
+}
+
+
+
 sub Load {
     my $self = shift;
     my $id = shift;
@@ -79,13 +146,13 @@ sub Load {
             ) );
     }
 
-    return ( 0, $som->fault->{ 'faultstring' } )
+    return ( undef, $som->fault->{ 'faultstring' } )
         if $som->fault;
 
-    return undef
+    return ( undef, 'Folder not found' )
         unless ref $som->result eq 'HASH';
 
-    return undef
+    return ( undef, 'Folder not found?' )
         unless $som->result->{'Folder'};
 
     for my $key ( keys %{$som->result->{'Folder'}} ) {
@@ -100,6 +167,36 @@ sub Id {
     my $self = shift;
 
     return $self->{'Id'};
+}
+
+
+sub Name {
+    my $self = shift;
+
+    return $self->{'Name'};
+}
+
+
+sub SetName {
+    my $self = shift;
+
+    my $name = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateFolderName(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( name => $name ),
+    );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return ( 1, "Name changed" );
 }
 
 
@@ -132,6 +229,13 @@ sub SetExternalId {
 }
 
 
+sub ParentFolder {
+    my $self = shift;
+    
+    return $self->{'ParentFolder'};
+}
+
+
 sub Description {
     my $self = shift;
 
@@ -161,10 +265,86 @@ sub SetDescription {
 }
 
 
-sub State {
+sub ListUrl {
     my $self = shift;
 
-    return $self->{'State'};
+    return $self->{'ListUrl'};
+}
+
+
+sub SettingsUrl {
+    my $self = shift;
+
+    return $self->{'SettingsUrl'};
+}
+
+
+sub LoadAccessDetails {
+    my $self = shift;
+
+    use Panopto::Interface::AccessManagement;
+    my $soap = new Panopto::Interface::AccessManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->GetFolderAccessDetails(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
+    );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return undef
+        unless ref $som->result eq 'HASH';
+
+    for my $key ( keys %{$som->result} ) {
+        $self->{$key} = $som->result->{$key};
+    }
+
+    return 1;
+
+}
+
+
+sub _ACL {
+    my $self = shift;
+    my $acltype = shift;
+
+    $self->LoadAccessDetails unless defined $self->{$acltype};
+
+    return undef unless $self->{$acltype};
+
+    return { guid => [ $self->{$acltype}->{'guid'} ] }
+        if ref $self->{$acltype}->{'guid'} ne 'ARRAY';
+
+    return $self->{$acltype};
+}
+
+
+sub UsersWithViewerAccess {
+    my $self = shift;
+
+    return $self->_ACL('UsersWithViewerAccess');
+}
+
+sub UsersWithCreatorAccess {
+    my $self = shift;
+
+    return $self->_ACL('UsersWithCreatorAccess');
+}
+
+sub GroupsWithViewerAccess {
+    my $self = shift;
+
+    return $self->_ACL('GroupsWithViewerAccess');
+}
+
+sub GroupsWithCreatorAccess {
+    my $self = shift;
+
+    return $self->_ACL('GroupsWithCreatorAccess');
 }
 
 

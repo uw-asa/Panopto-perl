@@ -41,8 +41,7 @@ ListRecorders => {
     endpoint => '/Panopto/PublicAPI/4.2/RemoteRecorderManagement.svc',
     soapaction => 'http://tempuri.org/IRemoteRecorderManagement/ListRecorders',
     namespace => 'http://tempuri.org/',
-    parameters =>
-    [
+    parameters => [
     ], # end parameters
   }, # end ListRecorders
 GetRemoteRecordersById => {
@@ -75,7 +74,7 @@ sub _call {
     my $name = UNIVERSAL::isa($method => 'SOAP::Data') ? $method->name : $method;
     my %method = %{$methods{$name}};
 
-    $self->proxy('https://' . Panopto->ServerName . $method{endpoint} || Carp::croak "No server address (proxy) specified")
+    $self->proxy('http://' . Panopto->ServerName . $method{endpoint} || Carp::croak "No server address (proxy) specified")
         unless $self->proxy;
     my @templates = @{$method{parameters}};
     my @parameters = ();
@@ -92,7 +91,7 @@ sub _call {
             push(@parameters, $param);
         }
     }
-    $self->endpoint('https://' . Panopto->ServerName . $method{endpoint})
+    $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
        ->ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
 #  $self->serializer->register_ns("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd","wsu");
