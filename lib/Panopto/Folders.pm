@@ -26,6 +26,8 @@ sub FindByExternalId {
     $soap->autotype(0);
     $soap->want_som(1);
 
+    map { s/&/&amp;/g } @externalIds;
+
     my $som = $soap->GetFoldersByExternalId(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(

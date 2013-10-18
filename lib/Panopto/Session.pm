@@ -88,27 +88,6 @@ sub CreateScheduled {
 }
 
 
-sub Duration {
-    my $self = shift;
-
-    return $self->{'Duration'};
-}
-
-
-sub Id {
-    my $self = shift;
-
-    return $self->{'Id'};
-}
-
-
-sub ExternalId {
-    my $self = shift;
-
-    return $self->{'ExternalId'};
-}
-
-
 sub SetExternalId {
     my $self = shift;
     my $externalId = shift;
@@ -128,20 +107,6 @@ sub SetExternalId {
         if $som->fault;
 
     return 1;
-}
-
-
-sub FolderName {
-    my $self = shift;
-
-    return $self->{'FolderName'};
-}
-
-
-sub IsBroadcast {
-    my $self = shift;
-
-    return $self->{'IsBroadcast'};
 }
 
 
@@ -176,13 +141,6 @@ sub UpdateIsBroadcast {
 }
 
 
-sub Name {
-    my $self = shift;
-
-    return $self->{'Name'};
-}
-
-
 sub SetName {
     my $self = shift;
     my $name = shift;
@@ -205,13 +163,6 @@ sub SetName {
 }
 
 
-sub Description {
-    my $self = shift;
-
-    return $self->{'Description'};
-}
-
-
 sub SetDescription {
     my $self = shift;
     my $description = shift;
@@ -231,47 +182,6 @@ sub SetDescription {
         if $som->fault;
 
     return 1;
-}
-
-
-=head StartTime
-
-    The time the session started, or is scheduled to start, in UTC
-
-=cut
-
-sub StartTime {
-    my $self = shift;
-
-    return $self->{'StartTime'};
-}
-
-
-=head2 State
-
-    The different states that a session can be in
-
-    one of:
-    Created       The session has just been created
-    Scheduled     The session is scheduled to be recorded
-    Recording     The session is currently recording
-    Broadcasting  The session is currently broadcasting
-    Processing    The session is done being recorded and is being processed by the server
-    Complete      The session has been recorded and processed and can now be viewed
-
-=cut
-
-sub State {
-    my $self = shift;
-
-    return $self->{'State'};
-}
-
-
-sub ViewerUrl {
-    my $self = shift;
-
-    return $self->{'ViewerUrl'};
 }
 
 
@@ -305,6 +215,19 @@ sub UpdateRecordingTime {
     my $result = $som->result->{'ScheduledRecordingResult'};
 
     return $result->{'SessionIDs'};
+}
+
+
+sub AUTOLOAD {
+    my $self = shift;
+    our $AUTOLOAD;
+    my $method;
+
+    if ( ($method) = $AUTOLOAD =~ /.*::(\w+)/ and defined($self->{$method}) ) {
+        return $self->{$method};
+    }
+
+    return ( undef, "Method $AUTOLOAD not defined" );
 }
 
 

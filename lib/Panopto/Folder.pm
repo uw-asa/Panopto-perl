@@ -236,6 +236,28 @@ sub ParentFolder {
 }
 
 
+sub SetParent {
+    my $self = shift;
+    my $parentId = shift;
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateFolderParent(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( parentId => $parentId ),
+    );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
+}
+
+
 sub Description {
     my $self = shift;
 
@@ -311,8 +333,6 @@ sub LoadAccessDetails {
 sub _ACL {
     my $self = shift;
     my $acltype = shift;
-
-    $self->LoadAccessDetails unless defined $self->{$acltype};
 
     return undef unless $self->{$acltype};
 
