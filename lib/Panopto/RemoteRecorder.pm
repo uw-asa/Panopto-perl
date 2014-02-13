@@ -61,20 +61,6 @@ sub Load {
 }
 
 
-sub Id {
-    my $self = shift;
-
-    return $self->{'Id'};
-}
-
-
-sub ExternalId {
-    my $self = shift;
-
-    return $self->{'ExternalId'};
-}
-
-
 sub SetExternalId {
     my $self = shift;
     my $externalId = shift;
@@ -94,56 +80,6 @@ sub SetExternalId {
         if $som->fault;
 
     return 1;
-}
-
-
-sub MachineIP {
-    my $self = shift;
-
-    return $self->{'MachineIP'};
-}
-
-
-sub Name {
-    my $self = shift;
-
-    return $self->{'Name'};
-}
-
-
-sub PreviewURL {
-    my $self = shift;
-
-    return $self->{'PreviewURL'};
-}
-
-
-sub SettingsURL {
-    my $self = shift;
-
-    return $self->{'SettingsURL'};
-}
-
-
-=head2 State
-
-    returns the state of the recorder, as a string.
-
-    Stopped         0   Not recording and no preview available
-    Previewing      1   Not recording and a preview is available
-    Recording       2   Currently recording
-    Paused          3   Paused during a recording
-    Faulted         4   An error has occured preventing recording
-    Disconnected    5   Not connected to the network
-    Blocked         6   The Panopto recorder (not the remote recorder) is
-                        Running on the machine so the remote recorder can't run
-
-=cut
-
-sub State {
-    my $self = shift;
-
-    return $self->{'State'};
 }
 
 
@@ -234,6 +170,19 @@ sub ScheduleRecording {
     my $result = $som->result->{'SessionIDs'};
 
     return $result->{'guid'};
+}
+
+
+sub AUTOLOAD {
+    my $self = shift;
+    our $AUTOLOAD;
+    my $method;
+
+    if ( ($method) = $AUTOLOAD =~ /.*::(\w+)/ and defined($self->{$method}) ) {
+        return $self->{$method};
+    }
+
+    return ( undef, "Method $AUTOLOAD not defined" );
 }
 
 
