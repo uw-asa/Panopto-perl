@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Panopto::Interface::SessionManagement;
+use Panopto::Interface::AccessManagement;
 #use SOAP::Lite +trace => qw(debug);
 
 
@@ -274,6 +275,8 @@ sub SetDescription {
     $soap->autotype(0);
     $soap->want_som(1);
 
+    $description =~ s/&/&amp;/g;
+
     my $som = $soap->UpdateFolderDescription(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
@@ -304,7 +307,6 @@ sub SettingsUrl {
 sub LoadAccessDetails {
     my $self = shift;
 
-    use Panopto::Interface::AccessManagement;
     my $soap = new Panopto::Interface::AccessManagement;
 
     $soap->autotype(0);
@@ -328,6 +330,82 @@ sub LoadAccessDetails {
     return 1;
 
 }
+
+
+sub RevokeUserAccess {
+    my $self = shift;
+    my %args = (
+        userId  => undef, # guid
+        role    => undef, # string: Creator or Viewer
+        @_
+        );
+
+    my $soap = new Panopto::Interface::AccessManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->RevokeUsersAccessFromFolder(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
+        SOAP::Data->prefix('tns')->name(
+            userIds => \SOAP::Data->value(
+                SOAP::Data->prefix('ser')->name( guid => $args{'userId'} ),
+            )
+        ),
+        SOAP::Data->prefix('tns')->name( role     => $args{'role'} ),
+    );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return undef
+        unless ref $som->result eq 'HASH';
+
+    for my $key ( keys %{$som->result} ) {
+        $self->{$key} = $som->result->{$key};
+    }
+
+    return 1;
+
+}
+
+
+sub RevokeGroupAccess {
+    my $self = shift;
+    my %args = (
+        groupId => undef, # guid
+        role    => undef, # string: Creator or Viewer
+        @_
+        );
+
+    my $soap = new Panopto::Interface::AccessManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->RevokeGroupAccessFromFolder(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
+        SOAP::Data->prefix('tns')->name( groupId  => $args{'groupId'} ),
+        SOAP::Data->prefix('tns')->name( role     => $args{'role'} ),
+    );
+
+    return ( 0, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return undef
+        unless ref $som->result eq 'HASH';
+
+    for my $key ( keys %{$som->result} ) {
+        $self->{$key} = $som->result->{$key};
+    }
+
+    return 1;
+
+}
+
+
 
 
 sub _ACL {
