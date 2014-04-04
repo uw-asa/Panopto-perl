@@ -146,6 +146,9 @@ sub SyncExternalUser {
     $soap->autotype(0);
     $soap->want_som(1);
 
+    my @externalGroupIds = @{$args{'externalGroupIds'}};
+    map { s/&/&amp;/g } @externalGroupIds;
+
     my $som = $soap->SyncExternalUser(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( firstName => $args{'firstName'} ),
@@ -155,7 +158,7 @@ sub SyncExternalUser {
             EmailSessionNotifications => $args{'EmailSessionNotifications'}?'true':'false' ),
         SOAP::Data->prefix('tns')->name(
             externalGroupIds => \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( string => $args{'externalGroupIds'} ) ) ),
+                SOAP::Data->prefix('ser')->name( string => \@externalGroupIds ) ) ),
         );
 
     return ( 0, $som->fault->{ 'faultstring' } )
