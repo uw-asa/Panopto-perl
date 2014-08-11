@@ -175,7 +175,7 @@ sub SetDescription {
     my $som = $soap->UpdateSessionDescription(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( sessionId => $self->Id ),
-        SOAP::Data->prefix('tns')->name( description => $description ),
+        SOAP::Data->prefix('tns')->name('description')->type('string')->value($description),
     );
 
     return ( undef, $som->fault->{ 'faultstring' } )
