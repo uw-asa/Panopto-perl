@@ -91,8 +91,8 @@ sub AuthenticationInfo {
         name   => 'auth',
         attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
         value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->name( AuthCode => $authCode ),
-            SOAP::Data->prefix('api')->name( UserKey  => $userKey ),
+            SOAP::Data->prefix('api')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( AuthCode => $authCode ),
+            SOAP::Data->prefix('api')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userKey ),
         ) );
 }
 
