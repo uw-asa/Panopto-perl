@@ -37,8 +37,8 @@ sub ListUsers {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             parameters => \SOAP::Data->value(
-                SOAP::Data->prefix('tns')->name(
-                    Pagination => \SOAP::Data->value(
+                SOAP::Data->prefix('tns')->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
+                    \SOAP::Data->value(
                         SOAP::Data->prefix('api')->name( MaxNumberResults => $args{'MaxNumberResults'} ),
                         SOAP::Data->prefix('api')->name( PageNumber => $args{'PageNumber'} ),
                     )
@@ -99,8 +99,8 @@ sub Find {
 
     $som = $soap->GetUsers(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name(
-            userIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('userIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( guid => $args{'guid'} )
             )
         ) );

@@ -27,8 +27,8 @@ sub FindByExternalId {
 
     my $som = $soap->GetRemoteRecordersByExternalId(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name(
-            externalIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('externalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( string => \@externalIds )
             )
         ) );

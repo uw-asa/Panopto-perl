@@ -97,8 +97,8 @@ sub SetExternalCourseAccess {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( name       => $args{'name'} ),
         SOAP::Data->prefix('tns')->name( externalId => $args{'externalId'} ),
-        SOAP::Data->prefix('tns')->name(
-            folderIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('folderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( guid => $self->Id ),
             )
         )
@@ -130,8 +130,8 @@ sub Load {
         # Query by guid
         $som = $soap->GetFoldersById(
             Panopto->AuthenticationInfo,
-            SOAP::Data->prefix('tns')->name(
-                folderIds => \SOAP::Data->value(
+            SOAP::Data->prefix('tns')->name('folderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+                \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( guid => $id ),
                 )
             ) );
@@ -140,8 +140,8 @@ sub Load {
         # Query by ExternalId
         $som = $soap->GetFoldersByExternalId(
             Panopto->AuthenticationInfo,
-            SOAP::Data->prefix('tns')->name(
-                folderExternalIds => \SOAP::Data->value(
+            SOAP::Data->prefix('tns')->name('folderExternalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+                \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( string => $id ),
                 )
             ) );
@@ -348,8 +348,8 @@ sub RevokeUserAccess {
     my $som = $soap->RevokeUsersAccessFromFolder(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
-        SOAP::Data->prefix('tns')->name(
-            userIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('userIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( guid => $args{'userId'} ),
             )
         ),

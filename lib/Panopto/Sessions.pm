@@ -41,8 +41,8 @@ sub Find {
 
     $som = $soap->GetSessionsById(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name(
-            sessionIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('sessionIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( guid => $args{'guid'} )
             )
         ) );

@@ -296,7 +296,7 @@ sub _call {
         }
     }
     $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
-       ->ns($method{namespace})
+       ->default_ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
     $self->serializer->register_ns("http://tempuri.org/","tns");
     $self->serializer->register_ns('http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40', 'api');

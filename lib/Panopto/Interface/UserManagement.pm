@@ -204,7 +204,7 @@ sub _call {
         }
     }
     $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
-       ->ns($method{namespace})
+       ->default_ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
 #  $self->serializer->register_ns("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd","wsu");
 #  $self->serializer->register_ns("http://schemas.xmlsoap.org/wsdl/soap12/","soap12");

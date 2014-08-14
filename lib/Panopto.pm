@@ -89,6 +89,7 @@ sub AuthenticationInfo {
     return SOAP::Data->new(
         prefix => 'tns',
         name   => 'auth',
+        attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
         value  => \SOAP::Data->value(
             SOAP::Data->prefix('api')->name( AuthCode => $authCode ),
             SOAP::Data->prefix('api')->name( UserKey  => $userKey ),
@@ -113,8 +114,8 @@ sub ListRecorders {
 
     my $som = $soap->ListRecorders(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name(
-            Pagination => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('api')->name( MaxNumberResults => $args{'MaxNumberResults'} ),
                 SOAP::Data->prefix('api')->name( PageNumber => $args{'PageNumber'} ),
             )
@@ -156,8 +157,8 @@ sub SyncExternalUser {
         SOAP::Data->prefix('tns')->name( email     => $args{'email'} ),
         SOAP::Data->prefix('tns')->name(
             EmailSessionNotifications => $args{'EmailSessionNotifications'}?'true':'false' ),
-        SOAP::Data->prefix('tns')->name(
-            externalGroupIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('externalGroupIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->prefix('ser')->name( string => \@externalGroupIds ) ) ),
         );
 

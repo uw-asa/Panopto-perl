@@ -30,8 +30,8 @@ sub Load {
         # Query by guid
         $som = $soap->GetRemoteRecordersById(
             Panopto->AuthenticationInfo,
-            SOAP::Data->prefix('tns')->name(
-                remoteRecorderIds => \SOAP::Data->value(
+            SOAP::Data->prefix('tns')->name('remoteRecorderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+                \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( guid => $id ),
                 )
             ) );
@@ -40,8 +40,8 @@ sub Load {
         # Query by ExternalId
         $som = $soap->GetRemoteRecordersByExternalId(
             Panopto->AuthenticationInfo,
-            SOAP::Data->prefix('tns')->name(
-                externalIds => \SOAP::Data->value(
+            SOAP::Data->prefix('tns')->name('externalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+                \SOAP::Data->value(
                     SOAP::Data->prefix('ser')->name( string => $id ),
                 )
             ) );
@@ -144,6 +144,7 @@ sub ScheduleRecording {
         prefix => 'tns',
 #        type  => 'api:ArrayOfRecorderSettings',
         name  => 'recorderSettings',
+        attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
         )->value( \$RecorderSettings );
 
     my $soap = new Panopto::Interface::RemoteRecorderManagement;
