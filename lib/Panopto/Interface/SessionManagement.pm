@@ -296,11 +296,9 @@ sub _call {
         }
     }
     $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
-       ->default_ns($method{namespace})
+       ->ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
     $self->serializer->register_ns("http://tempuri.org/","tns");
-    $self->serializer->register_ns('http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40', 'api');
-    $self->serializer->register_ns('http://schemas.microsoft.com/2003/10/Serialization/Arrays', 'ser');
     my $som = $self->SUPER::call($method => @parameters);
     if ($self->want_som) {
         return $som;

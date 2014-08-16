@@ -34,8 +34,8 @@ sub ListGroups {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name('pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('api')->name( MaxNumberResults => $args{'MaxNumberResults'} ),
-                SOAP::Data->prefix('api')->name( PageNumber => $args{'PageNumber'} ),
+                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
+                SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
             )
         ),
         );

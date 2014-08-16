@@ -32,7 +32,7 @@ sub Load {
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('userIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
-                    SOAP::Data->prefix('ser')->name( guid => $id ),
+                    SOAP::Data->name( guid => $id ),
                 )
             ) );
     } else {

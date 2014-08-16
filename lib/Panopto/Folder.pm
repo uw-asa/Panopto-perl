@@ -99,7 +99,7 @@ sub SetExternalCourseAccess {
         SOAP::Data->prefix('tns')->name( externalId => $args{'externalId'} ),
         SOAP::Data->prefix('tns')->name('folderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( guid => $self->Id ),
+                SOAP::Data->name( guid => $self->Id ),
             )
         )
         );
@@ -132,7 +132,7 @@ sub Load {
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('folderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
-                    SOAP::Data->prefix('ser')->name( guid => $id ),
+                    SOAP::Data->name( guid => $id ),
                 )
             ) );
     }
@@ -142,7 +142,7 @@ sub Load {
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('folderExternalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
-                    SOAP::Data->prefix('ser')->name( string => $id ),
+                    SOAP::Data->name( string => $id ),
                 )
             ) );
     }
@@ -350,7 +350,7 @@ sub RevokeUserAccess {
         SOAP::Data->prefix('tns')->name( folderId => $self->Id ),
         SOAP::Data->prefix('tns')->name('userIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( guid => $args{'userId'} ),
+                SOAP::Data->name( guid => $args{'userId'} ),
             )
         ),
         SOAP::Data->prefix('tns')->name( role     => $args{'role'} ),

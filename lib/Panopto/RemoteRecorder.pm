@@ -32,7 +32,7 @@ sub Load {
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('remoteRecorderIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
-                    SOAP::Data->prefix('ser')->name( guid => $id ),
+                    SOAP::Data->name( guid => $id ),
                 )
             ) );
     }
@@ -42,7 +42,7 @@ sub Load {
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('externalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
-                    SOAP::Data->prefix('ser')->name( string => $id ),
+                    SOAP::Data->name( string => $id ),
                 )
             ) );
     }
@@ -114,28 +114,24 @@ sub ScheduleRecording {
         );
 
     my $RecorderId = SOAP::Data->new(
-        prefix => 'api',
 #        type  => 'ser:guid',
         name  => 'RecorderId',
         value => $self->Id,
         );
 
     my $SuppressPrimary = SOAP::Data->new(
-        prefix => 'api',
 #        type  => 'boolean',
         name  => 'SuppressPrimary',
         value => 'false',
         );
 
     my $SuppressSecondary = SOAP::Data->new(
-        prefix => 'api',
 #        type  => 'boolean',
         name  => 'SuppressSecondary',
         value => 'false',
         );
 
     my $RecorderSettings = SOAP::Data->new(
-        prefix => 'api',
 #        type  => 'tns:RecorderSettings',
         name  => 'RecorderSettings',
         )->value( [ $RecorderId, $SuppressPrimary, $SuppressSecondary ] );

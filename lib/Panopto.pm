@@ -91,8 +91,8 @@ sub AuthenticationInfo {
         name   => 'auth',
         attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
         value  => \SOAP::Data->value(
-            SOAP::Data->prefix('api')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( AuthCode => $authCode ),
-            SOAP::Data->prefix('api')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userKey ),
+            SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( AuthCode => $authCode ),
+            SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userKey ),
         ) );
 }
 
@@ -114,13 +114,13 @@ sub ListRecorders {
 
     my $som = $soap->ListRecorders(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
+        SOAP::Data->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('api')->name( MaxNumberResults => $args{'MaxNumberResults'} ),
-                SOAP::Data->prefix('api')->name( PageNumber => $args{'PageNumber'} ),
+                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
+                SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
             )
         ),
-        SOAP::Data->prefix('tns')->name( SortBy => $args{'SortBy'} )
+        SOAP::Data->name( SortBy => $args{'SortBy'} )
         );
 
     die ($som->fault->{ 'faultstring' }) if $som->fault;
@@ -159,7 +159,7 @@ sub SyncExternalUser {
             EmailSessionNotifications => $args{'EmailSessionNotifications'}?'true':'false' ),
         SOAP::Data->prefix('tns')->name('externalGroupIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( string => \@externalGroupIds ) ) ),
+                SOAP::Data->name( string => \@externalGroupIds ) ) ),
         );
 
     return ( 0, $som->fault->{ 'faultstring' } )

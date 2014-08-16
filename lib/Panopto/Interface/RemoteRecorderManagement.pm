@@ -92,25 +92,9 @@ sub _call {
         }
     }
     $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
-       ->default_ns($method{namespace})
+       ->ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
-#  $self->serializer->register_ns("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd","wsu");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/wsdl/soap12/","soap12");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/ws/2004/08/addressing/policy","wsap");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/ws/2004/09/policy","wsp");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/wsdl/soap/","soap");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/wsdl/","wsdl");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/soap/encoding/","soapenc");
     $self->serializer->register_ns("http://tempuri.org/","tns");
-    $self->serializer->register_ns("http://www.w3.org/2001/XMLSchema","xs");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/ws/2004/08/addressing","wsa");
-#  $self->serializer->register_ns("http://www.w3.org/2005/08/addressing","wsa10");
-#  $self->serializer->register_ns("http://schemas.microsoft.com/ws/2005/12/wsdl/contract","msc");
-#  $self->serializer->register_ns("http://www.w3.org/2006/05/addressing/wsdl","wsaw");
-#  $self->serializer->register_ns("http://www.w3.org/2007/05/addressing/metadata","wsam");
-#  $self->serializer->register_ns("http://schemas.xmlsoap.org/ws/2004/09/mex","wsx");
-    $self->serializer->register_ns('http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40', 'api');
-    $self->serializer->register_ns('http://schemas.microsoft.com/2003/10/Serialization/Arrays', 'ser');
     my $som = $self->SUPER::call($method => @parameters);
     if ($self->want_som) {
         return $som;

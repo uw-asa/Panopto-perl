@@ -43,7 +43,7 @@ sub Find {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name('sessionIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
             \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( guid => $args{'guid'} )
+                SOAP::Data->name( guid => $args{'guid'} )
             )
         ) );
 
@@ -84,7 +84,7 @@ sub FindByExternalId {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             sessionExternalIds => \SOAP::Data->value(
-                SOAP::Data->prefix('ser')->name( string => \@externalIds )
+                SOAP::Data->name( string => \@externalIds )
             )
         ) );
 
