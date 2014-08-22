@@ -68,6 +68,7 @@ sub ListFolders {
         PublicOnly       => 'false',
         SortBy           => 'Name',
         SortIncreasing   => 'true',
+        searchQuery      => undef,
         @_,
         );
 
@@ -85,8 +86,13 @@ sub ListFolders {
                         SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
                         SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
                     ) ),
+                SOAP::Data->name( ParentFolderId => $args{'ParentFolderId'} ),
+                SOAP::Data->name( PublicOnly => $args{'PublicOnly'} ),
+                SOAP::Data->name( SortBy => $args{'SortBy'} ),
+                SOAP::Data->name( SortIncreasing => $args{'SortIncreasing'} ),
             ),
         ),
+        SOAP::Data->prefix('tns')->name('searchQuery')->type('string')->value($args{'searchQuery'}),
         );
 
     $self->{'folder_list'} = undef;
