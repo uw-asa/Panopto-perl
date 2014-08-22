@@ -54,7 +54,7 @@ sub Load {
         unless $som->result->{'RemoteRecorder'};
 
     for my $key ( keys %{$som->result->{'RemoteRecorder'}} ) {
-        $self->{$key} = $som->result->{'RemoteRecorder'}->{$key};
+        $self->{$key} = defined($som->result->{'RemoteRecorder'}->{$key}) ? $som->result->{'RemoteRecorder'}->{$key} : '';
     }
 
     return $self->Id;

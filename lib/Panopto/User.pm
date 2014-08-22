@@ -57,7 +57,7 @@ sub Load {
         unless $res;
 
     for my $key ( keys %{$res} ) {
-        $self->{$key} = $res->{$key};
+        $self->{$key} = defined($res->{$key}) ? $res->{$key} : '';
     }
 
     return $self->Id;

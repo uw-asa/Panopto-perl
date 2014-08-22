@@ -157,7 +157,7 @@ sub Load {
         unless $som->result->{'Folder'};
 
     for my $key ( keys %{$som->result->{'Folder'}} ) {
-        $self->{$key} = $som->result->{'Folder'}->{$key};
+        $self->{$key} = defined($som->result->{'Folder'}->{$key}) ? $som->result->{'Folder'}->{$key} : '';
     }
 
     return $self->Id;
@@ -324,7 +324,7 @@ sub LoadAccessDetails {
         unless ref $som->result eq 'HASH';
 
     for my $key ( keys %{$som->result} ) {
-        $self->{$key} = $som->result->{$key};
+        $self->{$key} = defined($som->result->{$key}) ? $som->result->{$key} : '';
     }
 
     return 1;

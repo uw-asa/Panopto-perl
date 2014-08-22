@@ -61,7 +61,7 @@ sub Load {
         if $som->fault;
 
     for my $key ( keys %{$som->result->{'Session'}} ) {
-        $self->{$key} = $som->result->{'Session'}->{$key};
+        $self->{$key} = defined($som->result->{'Session'}->{$key}) ? $som->result->{'Session'}->{$key} : '';
     }
 
     return $self->Id;

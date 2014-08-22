@@ -42,7 +42,7 @@ sub Load {
         unless ref $som->result eq 'HASH';
 
     for my $key ( keys %{$som->result} ) {
-        $self->{$key} = $som->result->{$key};
+        $self->{$key} = defined($som->result->{$key}) ? $som->result->{$key} : '';
     }
 
     return $self->Id;
