@@ -97,39 +97,6 @@ sub AuthenticationInfo {
 }
 
 
-sub ListRecorders {
-    my $self = shift;
-    my %args = (
-        MaxNumberResults => 100,
-        PageNumber       => 1,
-        SortBy           => Name,
-        @_,
-        );
-
-    use Panopto::Interface::RemoteRecorderManagement;
-    my $soap = new Panopto::Interface::RemoteRecorderManagement;
-
-    $soap->autotype(0);
-    $soap->want_som(1);
-
-    my $som = $soap->ListRecorders(
-        Panopto->AuthenticationInfo,
-        SOAP::Data->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
-            \SOAP::Data->value(
-                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
-                SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
-            )
-        ),
-        SOAP::Data->name( SortBy => $args{'SortBy'} )
-        );
-
-    die ($som->fault->{ 'faultstring' }) if $som->fault;
-
-    return @{$som->result->{'PagedResults'}->{'RemoteRecorder'}};
-
-}
-
-
 sub SyncExternalUser {
     my $self = shift;
     my %args = (
