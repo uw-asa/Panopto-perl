@@ -193,6 +193,7 @@ sub UpdateRecordingTime {
         @_,
         );
 
+    use Panopto::Interface::RemoteRecorderManagement;
     my $soap = new Panopto::Interface::RemoteRecorderManagement;
 
     $soap->autotype(0);
