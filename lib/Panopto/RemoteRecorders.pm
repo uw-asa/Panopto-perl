@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::RemoteRecorder;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -20,7 +19,7 @@ sub Load {
     my $self = shift;
     my %args = (
         MaxNumberResults => 25,
-        PageNumber       => 1,
+        PageNumber       => 0,
         SortBy           => 'Name',
         @_,
         );
@@ -33,13 +32,13 @@ sub Load {
 
     my $som = $soap->ListRecorders(
         Panopto->AuthenticationInfo,
-        SOAP::Data->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
-            \SOAP::Data->value(
-                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
-                SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
+        SOAP::Data->prefix('tns')->name(
+            pagination => \SOAP::Data->value(
+                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} )->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'}),
+                SOAP::Data->name( PageNumber => $args{'PageNumber'} )->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'}),
             )
         ),
-        SOAP::Data->name( SortBy => $args{'SortBy'} )
+        SOAP::Data->name( sortBy => $args{'SortBy'} )
         );
 
     $self->{'recorder_list'} = undef;

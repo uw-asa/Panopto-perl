@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::Group;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -21,7 +20,7 @@ sub ListGroups {
     my $self = shift;
     my %args = (
         MaxNumberResults => 100,
-        PageNumber       => 1,
+        PageNumber       => 0,
         @_,
         );
 
@@ -32,10 +31,10 @@ sub ListGroups {
 
     my $som = $soap->ListGroups(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name('pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
-            \SOAP::Data->value(
-                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
-                SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
+        SOAP::Data->prefix('tns')->name(
+            pagination => \SOAP::Data->value(
+                SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} )->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'}),
+                SOAP::Data->name( PageNumber => $args{'PageNumber'} )->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'}),
             )
         ),
         );

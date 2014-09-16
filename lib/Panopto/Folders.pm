@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::Folder;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -63,7 +62,7 @@ sub ListFolders {
     my $self = shift;
     my %args = (
         MaxNumberResults => 100,
-        PageNumber       => 1,
+        PageNumber       => 0,
         ParentFolderId   => undef,
         PublicOnly       => 'false',
         SortBy           => 'Name',
@@ -81,15 +80,16 @@ sub ListFolders {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             request => \SOAP::Data->value(
-                SOAP::Data->prefix('tns')->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
-                    \SOAP::Data->value(
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name(
+                    Pagination => \SOAP::Data->value(
                         SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
                         SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
-                    ) ),
-                SOAP::Data->name( ParentFolderId => $args{'ParentFolderId'} ),
-                SOAP::Data->name( PublicOnly => $args{'PublicOnly'} ),
-                SOAP::Data->name( SortBy => $args{'SortBy'} ),
-                SOAP::Data->name( SortIncreasing => $args{'SortIncreasing'} ),
+                    )
+                ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( ParentFolderId => $args{'ParentFolderId'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( PublicOnly => $args{'PublicOnly'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortBy => $args{'SortBy'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortIncreasing => $args{'SortIncreasing'} ),
             ),
         ),
         SOAP::Data->prefix('tns')->name('searchQuery')->type('string')->value($args{'searchQuery'}),

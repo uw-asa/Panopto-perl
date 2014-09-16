@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::User;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -24,7 +23,9 @@ sub ListUsers {
     my %args = (
         MaxNumberResults => 100,
         PageNumber       => 1,
-        SortBy           => 'Name',
+        SortBy           => 'UserKey',
+        SortIncreasing   => 'true',
+        searchQuery      => undef,
         @_,
         );
 
@@ -37,14 +38,14 @@ sub ListUsers {
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name(
             parameters => \SOAP::Data->value(
-                SOAP::Data->prefix('tns')->name('Pagination')->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->value(
-                    \SOAP::Data->value(
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name(
+                    Pagination => \SOAP::Data->value(
                         SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
                         SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
                     )
                 ),
-                SOAP::Data->prefix('tns')->name( SortBy => $args{'SortBy'} ),
-                SOAP::Data->prefix('tns')->name( SortIncreasing => $args{'SortIncreasing'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortBy => $args{'SortBy'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortIncreasing => $args{'SortIncreasing'} ),
             ),
         ),
         SOAP::Data->prefix('tns')->name( searchQuery => $args{'searchQuery'} ),
