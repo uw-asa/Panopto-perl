@@ -5,7 +5,6 @@ use warnings;
 
 use Panopto::Interface::SessionManagement;
 use Panopto::Interface::AccessManagement;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -164,20 +163,6 @@ sub Load {
 }
 
 
-sub Id {
-    my $self = shift;
-
-    return $self->{'Id'};
-}
-
-
-sub Name {
-    my $self = shift;
-
-    return $self->{'Name'};
-}
-
-
 sub SetName {
     my $self = shift;
 
@@ -198,13 +183,6 @@ sub SetName {
         if $som->fault;
 
     return ( 1, "Name changed" );
-}
-
-
-sub ExternalId {
-    my $self = shift;
-
-    return $self->{'ExternalId'};
 }
 
 
@@ -230,13 +208,6 @@ sub SetExternalId {
 }
 
 
-sub ParentFolder {
-    my $self = shift;
-    
-    return $self->{'ParentFolder'};
-}
-
-
 sub SetParent {
     my $self = shift;
     my $parentId = shift;
@@ -256,13 +227,6 @@ sub SetParent {
         if $som->fault;
 
     return 1;
-}
-
-
-sub Description {
-    my $self = shift;
-
-    return $self->{'Description'};
 }
 
 
@@ -287,20 +251,6 @@ sub SetDescription {
         if $som->fault;
 
     return 1;
-}
-
-
-sub ListUrl {
-    my $self = shift;
-
-    return $self->{'ListUrl'};
-}
-
-
-sub SettingsUrl {
-    my $self = shift;
-
-    return $self->{'SettingsUrl'};
 }
 
 
@@ -406,8 +356,6 @@ sub RevokeGroupAccess {
 }
 
 
-
-
 sub _ACL {
     my $self = shift;
     my $acltype = shift;
@@ -443,6 +391,19 @@ sub GroupsWithCreatorAccess {
     my $self = shift;
 
     return $self->_ACL('GroupsWithCreatorAccess');
+}
+
+
+sub AUTOLOAD {
+    my $self = shift;
+    our $AUTOLOAD;
+    my $method;
+
+    if ( ($method) = $AUTOLOAD =~ /.*::(\w+)/ and defined($self->{$method}) ) {
+        return $self->{$method};
+    }
+
+    return ( undef, "Method $AUTOLOAD not defined" );
 }
 
 

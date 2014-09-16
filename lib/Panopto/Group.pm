@@ -4,12 +4,11 @@ use strict;
 use warnings;
 
 use Panopto::Interface::UserManagement;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
     my $class = shift;
-    my $self  = {};
+    my $self  = { @_ };
     bless ($self, $class);
 
     return $self;
@@ -69,45 +68,16 @@ sub Delete {
 }
 
 
-sub Id {
+sub AUTOLOAD {
     my $self = shift;
+    our $AUTOLOAD;
+    my $method;
 
-    return $self->{'Id'};
-}
+    if ( ($method) = $AUTOLOAD =~ /.*::(\w+)/ and defined($self->{$method}) ) {
+        return $self->{$method};
+    }
 
-
-sub ExternalId {
-    my $self = shift;
-
-    return $self->{'ExternalId'};
-}
-
-
-sub Name {
-    my $self = shift;
-
-    return $self->{'Name'};
-}
-
-
-sub GroupType {
-    my $self = shift;
-
-    return $self->{'GroupType'};
-}
-
-
-sub MembershipProviderName {
-    my $self = shift;
-
-    return $self->{'MembershipProviderName'};
-}
-
-
-sub SystemRole {
-    my $self = shift;
-
-    return $self->{'SystemRole'};
+    return ( undef, "Method $AUTOLOAD not defined" );
 }
 
 

@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::Interface::UserManagement;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
@@ -64,75 +63,6 @@ sub Load {
 }
 
 
-sub Id {
-    my $self = shift;
-
-    return $self->{'UserId'};
-}
-
-
-sub UserId {
-    my $self = shift;
-
-    return $self->{'UserId'};
-}
-
-
-sub FirstName {
-    my $self = shift;
-
-    return $self->{'FirstName'};
-}
-
-
-sub LastName {
-    my $self = shift;
-
-    return $self->{'LastName'};
-}
-
-
-sub UserKey {
-    my $self = shift;
-
-    return $self->{'UserKey'};
-}
-
-
-sub Email {
-    my $self = shift;
-
-    return $self->{'Email'};
-}
-
-
-sub SystemRole {
-    my $self = shift;
-
-    return $self->{'SystemRole'};
-}
-
-
-sub UserBio {
-    my $self = shift;
-
-    return $self->{'UserBio'};
-}
-
-sub EmailSessionNotifications {
-    my $self = shift;
-
-    return $self->{'EmailSessionNotifications'};
-}
-
-
-sub UserSettingsUrl {
-    my $self = shift;
-
-    return $self->{'UserSettingsUrl'};
-}
-
-
 sub GroupMemberships {
     my $self = shift;
 
@@ -142,6 +72,19 @@ sub GroupMemberships {
         if ref $self->{'GroupMemberships'}->{'guid'} ne 'ARRAY';
 
     return $self->{'GroupMemberships'};
+}
+
+
+sub AUTOLOAD {
+    my $self = shift;
+    our $AUTOLOAD;
+    my $method;
+
+    if ( ($method) = $AUTOLOAD =~ /.*::(\w+)/ and defined($self->{$method}) ) {
+        return $self->{$method};
+    }
+
+    return ( undef, "Method $AUTOLOAD not defined" );
 }
 
 
