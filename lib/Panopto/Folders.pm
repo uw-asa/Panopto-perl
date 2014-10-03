@@ -27,7 +27,7 @@ sub FindByExternalId {
 
     map { s/&/&amp;/g } @externalIds;
 
-    my $som = $soap->GetFoldersByExternalId(
+    my $som = $soap->GetAllFoldersByExternalId(
         Panopto->AuthenticationInfo,
         SOAP::Data->prefix('tns')->name('folderExternalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
             \SOAP::Data->value(
@@ -61,11 +61,11 @@ sub FindByExternalId {
 sub ListFolders {
     my $self = shift;
     my %args = (
-        MaxNumberResults => 100,
+        MaxNumberResults => 50,
         PageNumber       => 0,
         ParentFolderId   => undef,
         PublicOnly       => 'false',
-        SortBy           => 'Name',
+        SortBy           => 'Name', # Sessions, Relavance (sic)
         SortIncreasing   => 'true',
         searchQuery      => undef,
         @_,
@@ -100,8 +100,8 @@ sub ListFolders {
     return undef
         if $som->fault;
 
-    return undef
-        unless $som->result->{'Results'}->{'Folder'};
+    return 0
+        unless $som->result->{'TotalNumberResults'};
 
     my @results;
     if ( ref $som->result->{'Results'}->{'Folder'} ne 'ARRAY' ) {
@@ -115,7 +115,7 @@ sub ListFolders {
         push @{$self->{'folder_list'}}, $Folder;
     }
 
-    return scalar(@{$self->{'folder_list'}});
+    return $som->result->{'TotalNumberResults'};
 }
 
 

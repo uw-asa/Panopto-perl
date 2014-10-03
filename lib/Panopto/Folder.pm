@@ -137,7 +137,7 @@ sub Load {
     }
     else {
         # Query by ExternalId
-        $som = $soap->GetFoldersByExternalId(
+        $som = $soap->GetAllFoldersByExternalId(
             Panopto->AuthenticationInfo,
             SOAP::Data->prefix('tns')->name('folderExternalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
                 \SOAP::Data->value(
@@ -160,6 +160,16 @@ sub Load {
     }
 
     return $self->Id;
+}
+
+
+sub SessionsObj {
+    my $self = shift;
+
+    use Panopto::Sessions;
+    my $sessions = Panopto::Sessions->new( %{$self->Sessions} );
+
+    return $sessions;
 }
 
 
