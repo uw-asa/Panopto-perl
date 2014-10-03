@@ -44,14 +44,52 @@ sub ListGroups {
     return undef
         if $som->fault;
 
-    return undef
-        unless $som->result->{'PagedResults'}->{'Group'};
+    return 0
+        unless $som->result->{'TotalResultCount'};
 
     my @results;
     if ( ref $som->result->{'PagedResults'}->{'Group'} ne 'ARRAY' ) {
         push @results, $som->result->{'PagedResults'}->{'Group'};
     } else {
         push @results, @{$som->result->{'PagedResults'}->{'Group'}};
+    }
+
+    for my $result (@results) {
+        my $Group = Panopto::Group->new(%$result);
+        push @{$self->{'group_list'}}, $Group;
+    }
+
+    return $som->result->{'TotalResultCount'};
+}
+
+
+
+sub FindByName {
+    my $self = shift;
+    my $groupName = shift;
+
+    my $soap = new Panopto::Interface::UserManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->GetGroupsByName(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name('groupName')->type('string')->value($groupName),
+        );
+
+    $self->{'group_list'} = undef;
+
+    return undef
+        if $som->fault;
+
+    return 0 unless $som->result && $som->result->{'Group'};
+
+    my @results;
+    if ( ref $som->result->{'Group'} ne 'ARRAY' ) {
+        push @results, $som->result->{'Group'};
+    } else {
+        push @results, @{$som->result->{'Group'}};
     }
 
     for my $result (@results) {
@@ -67,7 +105,7 @@ sub ListGroups {
 sub List {
     my $self = shift;
 
-    return undef unless $self->{'group_list'};
+    return () unless $self->{'group_list'};
 
     return @{$self->{'group_list'}};
 }
