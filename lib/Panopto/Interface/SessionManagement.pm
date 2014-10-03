@@ -11,6 +11,13 @@ GetFoldersByExternalId => {
     parameters => [
     ], # end parameters
   }, # end GetFoldersByExternalId
+GetAllFoldersByExternalId => {
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    soapaction => 'http://tempuri.org/ISessionManagement/GetAllFoldersByExternalId',
+    namespace => 'http://tempuri.org/',
+    parameters => [
+    ], # end parameters
+  }, # end GetFoldersByExternalId
 UpdateSessionExternalId => {
     endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
     soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionExternalId',
@@ -263,6 +270,13 @@ UpdateFolderDescription => {
     parameters => [
     ], # end parameters
   }, # end UpdateFolderDescription
+UpdateSessionOwner => {
+    endpoint => '/Panopto/PublicAPI/4.2/SessionManagement.svc',
+    soapaction => 'http://tempuri.org/ISessionManagement/UpdateSessionOwner',
+    namespace => 'http://tempuri.org/',
+    parameters => [
+    ], # end parameters
+  }, # end UpdateSessionOwner
 ); # end my %methods
 
 use SOAP::Lite;
