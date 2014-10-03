@@ -82,8 +82,8 @@ sub FindByExternalId {
 
     my $som = $soap->GetSessionsByExternalId(
         Panopto->AuthenticationInfo,
-        SOAP::Data->prefix('tns')->name(
-            sessionExternalIds => \SOAP::Data->value(
+        SOAP::Data->prefix('tns')->name('sessionExternalIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
                 SOAP::Data->name( string => \@externalIds )
             )
         ) );
@@ -117,6 +117,72 @@ sub List {
     return () unless $self->{'session_list'};
 
     return @{$self->{'session_list'}};
+}
+
+
+sub UpdateOwner {
+    my $self = shift;
+    my $userKey = shift;
+
+    return ( undef, "no sessions to update" )
+        unless $self->{'session_list'};
+
+    return ( undef, "no UserKey to update" )
+        unless $userKey;
+    
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->UpdateSessionOwner(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name('sessionIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
+                SOAP::Data->name( guid => map { $_->Id } @{$self->{'session_list'}} )
+            ),
+            SOAP::Data->prefix('tns')->name(
+                newOwnerUserKey => $userKey ),
+        ) );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
+
+}
+
+
+sub Move {
+    my $self = shift;
+    my $folderId = shift;
+
+    return ( undef, "no sessions to move" )
+        unless $self->{'session_list'};
+
+    return ( undef, "no folder to move to" )
+        unless $folderId;
+    
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->MoveSessions(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name('sessionIds')->attr({xmlns => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'})->value(
+            \SOAP::Data->value(
+                SOAP::Data->name( guid => map { $_->Id } @{$self->{'session_list'}} )
+            ),
+            SOAP::Data->prefix('tns')->name(
+                folderId => $folderId ),
+        ) );
+
+    return ( undef, $som->fault->{ 'faultstring' } )
+        if $som->fault;
+
+    return 1;
+
 }
 
 
