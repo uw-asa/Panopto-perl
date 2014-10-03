@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::Interface::SessionManagement;
-#use SOAP::Lite +trace => qw(debug);
 
 
 =head2 new

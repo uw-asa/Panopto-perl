@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Panopto::Interface::RemoteRecorderManagement;
-#use SOAP::Lite +trace => qw(debug);
 
 
 sub new  {
