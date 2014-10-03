@@ -20,7 +20,7 @@ sub Load {
     my %args = (
         MaxNumberResults => 25,
         PageNumber       => 0,
-        SortBy           => 'Name',
+        SortBy           => 'Name', # State
         @_,
         );
 
@@ -46,7 +46,8 @@ sub Load {
     return ( undef, $som->fault->{ 'faultstring' } )
         if $som->fault;
 
-    return 0 unless $som->result && $som->result->{'PagedResults'}->{'RemoteRecorder'};
+    return 0
+        unless $som->result->{'TotalResultCount'};
 
     my @results;
     if ( ref $som->result->{'PagedResults'}->{'RemoteRecorder'} ne 'ARRAY' ) {
@@ -60,8 +61,7 @@ sub Load {
         push @{$self->{'recorder_list'}}, $RemoteRecorder;
     }
 
-    return scalar(@{$self->{'recorder_list'}});
-
+    return $som->result->{'TotalResultCount'};
 }
 
 
