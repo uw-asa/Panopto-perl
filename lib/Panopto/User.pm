@@ -59,7 +59,7 @@ sub Load {
         $self->{$key} = defined($res->{$key}) ? $res->{$key} : '';
     }
 
-    return $self->Id;
+    return $self->UserId;
 }
 
 
