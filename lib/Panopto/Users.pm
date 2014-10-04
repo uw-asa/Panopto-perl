@@ -21,9 +21,9 @@ sub new  {
 sub ListUsers {
     my $self = shift;
     my %args = (
-        MaxNumberResults => 100,
-        PageNumber       => 1,
-        SortBy           => 'UserKey',
+        MaxNumberResults => 50,
+        PageNumber       => 0,
+        SortBy           => 'UserKey', # Role, Added, LastLogOn, Email, FullName
         SortIncreasing   => 'true',
         searchQuery      => undef,
         @_,
@@ -56,7 +56,7 @@ sub ListUsers {
     return undef
         if $som->fault;
 
-    return undef
+    return 0
         unless $som->result->{'PagedResults'}->{'User'};
 
     my @results;
@@ -71,7 +71,7 @@ sub ListUsers {
         push @{$self->{'user_list'}}, $User;
     }
 
-    return scalar(@{$self->{'user_list'}});
+    return $som->result->{'TotalResultCount'};
 }
 
 
