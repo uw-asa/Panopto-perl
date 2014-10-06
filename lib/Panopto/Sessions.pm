@@ -111,6 +111,78 @@ sub FindByExternalId {
 }
 
 
+sub ListSessions {
+    my $self = shift;
+    my %args = (
+        MaxNumberResults => 50,
+        PageNumber       => 0,
+        StartDate        => undef,
+        EndDate          => undef,
+        FolderId         => undef,
+        RemoteRecorderId => undef,
+        States           => undef, # Created Scheduled Recording Broadcasting Processing Complete
+        SortBy           => 'Name', # Date, Duration State, Relevance
+        SortIncreasing   => 'true',
+        searchQuery      => undef,
+        @_,
+        );
+
+    my $soap = new Panopto::Interface::SessionManagement;
+
+    $soap->autotype(0);
+    $soap->want_som(1);
+
+    my $som = $soap->GetSessionsList(
+        Panopto->AuthenticationInfo,
+        SOAP::Data->prefix('tns')->name(
+            request => \SOAP::Data->value(
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( EndDate => $args{'EndDate'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( FolderId => $args{'FolderId'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name(
+                    Pagination => \SOAP::Data->value(
+                        SOAP::Data->name( MaxNumberResults => $args{'MaxNumberResults'} ),
+                        SOAP::Data->name( PageNumber => $args{'PageNumber'} ),
+                    )
+                ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( RemoteRecorderId => $args{'RemoteRecorderId'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortBy => $args{'SortBy'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( SortIncreasing => $args{'SortIncreasing'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( StartDate => $args{'StartDate'} ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( 'States' )->value(
+                    ( $args{'States'} ? \SOAP::Data->value(
+                        SOAP::Data->name( SessionState => @{$args{'States'}} )
+                    ) : undef ),
+                ),
+            ),
+        ),
+        SOAP::Data->prefix('tns')->name('searchQuery')->type('string')->value($args{'searchQuery'}),
+        );
+
+    $self->{'session_list'} = undef;
+
+    return undef
+        if $som->fault;
+
+    return 0
+        unless $som->result->{'TotalNumberResults'};
+
+    my @results;
+    if ( ref $som->result->{'Results'}->{'Session'} ne 'ARRAY' ) {
+        push @results, $som->result->{'Results'}->{'Session'};
+    } else {
+        push @results, @{$som->result->{'Results'}->{'Session'}};
+    }
+
+    for my $result (@results) {
+        my $Session = Panopto::Session->new(%$result);
+        push @{$self->{'session_list'}}, $Session;
+    }
+
+    return $som->result->{'TotalNumberResults'};
+}
+
+
+
 sub List {
     my $self = shift;
 
