@@ -87,14 +87,25 @@ sub AuthenticationInfo {
     my $userKey = GetUserKey( $userName );
     my $authCode = GetAuthCode( $userKey . '@' . $serverName );
 
-    return SOAP::Data->new(
-        prefix => 'tns',
-        name   => 'auth',
-        attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
-        value  => \SOAP::Data->value(
-            SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( AuthCode => $authCode ),
-            SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userKey ),
-        ) );
+    if($providerName) {
+        return SOAP::Data->new(
+            prefix => 'tns',
+            name   => 'auth',
+            attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
+            value  => \SOAP::Data->value(
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( AuthCode => $authCode ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userKey ),
+            ) );
+    } else {
+        return SOAP::Data->new(
+            prefix => 'tns',
+            name   => 'auth',
+            attr  => {xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'},
+            value  => \SOAP::Data->value(
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( Password => $applicationKey ),
+                SOAP::Data->attr({xmlns => 'http://schemas.datacontract.org/2004/07/Panopto.Server.Services.PublicAPI.V40'})->name( UserKey  => $userName ),
+            ) );
+    }
 }
 
 
