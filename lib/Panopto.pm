@@ -28,6 +28,7 @@ sub import
         if $args{'providerName'};
     $self->SetApplicationKey( $args{'applicationKey'} )
         if $args{'applicationKey'};
+    return $self;
 }
 
 
