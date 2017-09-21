@@ -309,7 +309,7 @@ sub _call {
             push(@parameters, $param);
         }
     }
-    $self->endpoint('http://' . Panopto->ServerName . $method{endpoint})
+    $self->endpoint('https://' . Panopto->ServerName . $method{endpoint})
        ->ns($method{namespace})
        ->on_action(sub{qq!"$method{soapaction}"!});
     $self->serializer->register_ns("http://tempuri.org/","tns");
